@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"charm.land/lipgloss/v2"
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
 )
@@ -24,6 +25,9 @@ type model struct {
 	Editing bool
 
 	Path string
+
+	width int
+	height int 
 }
 
 func New(path string) model{
@@ -170,32 +174,64 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Input.Placeholder= m.Tasks[m.Cursor].Title
 			m.Editing = true
 		}
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
 	}
 
 return m, nil
 }
+
+var (
+titleStyle = lipgloss.NewStyle().
+	Bold(true).
+	Align(lipgloss.Center).
+	MarginBottom(1)
+
+doneStyle = lipgloss.NewStyle().
+	Strikethrough(true).
+	Faint(true)
+
+checkStyle = lipgloss.NewStyle().
+	Faint(true)
+
+helpStyle = lipgloss.NewStyle().
+	Faint(true).
+	Align(lipgloss.Center)
+
+cursorStyle = lipgloss.NewStyle().
+	Bold(true)
+
+)
+
+
 func (m model) View() tea.View {
-	s:= "Todo List\n\n"
+	s:= titleStyle.Width(m.width).Render("Todo List") + "\n"
 
 	for i, task := range m.Tasks {
 		cursor := " "
 		if m.Cursor == i {
-			cursor = ">"
+			cursor = cursorStyle.Render(">")
 		}
 
-		check := " "
+		check := "[ ]"
 		if task.Completed {
-			check = "X"
+			check = checkStyle.Render("[X]")
+		}
+		title := task.Title
+		if task.Completed{
+			title = doneStyle.Render(title)
 		}
 
-		s+= fmt.Sprintf("%s [%s] %s\n", cursor, check, task.Title)
+		s+= fmt.Sprintf("%s %s %s\n", cursor, check, title)
 	}
 
 	if m.Adding ||  m.Editing {
 		s +="\n\n"+ m.Input.View()
 	} else {
-		s += "\n\n q quit - a add - d delete - x toggle - e edit"
+		s += helpStyle.Width(m.width).Render("\n\n q quit - a add - d delete - x toggle - e edit")
 	}
+
 	v := tea.NewView(s)
 	v.AltScreen = true
 	return v
