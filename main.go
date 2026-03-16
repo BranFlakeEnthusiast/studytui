@@ -5,8 +5,8 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 
-	"tui/modules"
-	"tui/modules/todo"
+	"studytui/modules"
+	"studytui/modules/todo"
 )
 
 func main() {

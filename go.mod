@@ -1,4 +1,4 @@
-module tui
+module studytui
 
 go 1.26.1
 
