@@ -35,7 +35,7 @@ func New(path string) model{
 	ti := textinput.New()
 	ti.Focus()
 	ti.CharLimit = 200
-	ti.SetWidth(20)
+	ti.SetWidth(50)
 
 	if len(path) > 0 && path[:2] == "~/" {
 		home, err := os.UserHomeDir()
@@ -174,6 +174,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if m.Cursor > 0 {
 					m.Cursor--
 				}
+				visibleHeight := m.height - 6
+				if m.offset > len(m.Tasks) - visibleHeight {
+					m.offset = max(0, len(m.Tasks) - visibleHeight)
+				}
 				saveTasks(m.Path, m.Tasks)
 			}
 		case "a":
@@ -182,7 +186,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "e":
 			if len(m.Tasks) > 0{
-				m.Input.Placeholder= m.Tasks[m.Cursor].Title
+				m.Input.SetValue(m.Tasks[m.Cursor].Title)
 				m.Editing = true
 			}
 		}
@@ -215,7 +219,7 @@ cursorStyle = lipgloss.NewStyle().
 	Bold(true)
 
 taskStyle = lipgloss.NewStyle().
-	MarginLeft(3)
+	Align(lipgloss.Left)
 )
 
 
@@ -246,8 +250,8 @@ func (m model) View() tea.View {
 
 		tasks += fmt.Sprintf("%s %s %s\n", cursor, check, title)
 	}
-
-	s += taskStyle.Render(tasks)
+	taskContaier := taskStyle.Render(tasks)
+	s += lipgloss.NewStyle().Width(m.width).Align(lipgloss.Center).Render(taskContaier)
 
 	if m.Adding ||  m.Editing {
 		s +="\n\n"+ m.Input.View()
