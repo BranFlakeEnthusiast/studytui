@@ -19,6 +19,7 @@ type Task struct{
 type model struct {
 	Tasks []Task
 	Cursor int
+	offset int
 
 	Input textinput.Model
 	Adding bool
@@ -147,9 +148,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Cursor++
 			}
 
+			visibleHeight := m.height - 6
+			if m.Cursor >= m.offset + visibleHeight {
+				m.offset++
+			}
+
 		case "k", "up":
 			if m.Cursor > 0 {
 				m.Cursor--
+			}
+
+			if m.Cursor < m.offset {
+				m.offset--
 			}
 
 		case "x","enter", "space":
@@ -212,8 +222,13 @@ taskStyle = lipgloss.NewStyle().
 func (m model) View() tea.View {
 	s:= titleStyle.Width(m.width).Render("Todo List") + "\n"
 
+	visibleHeight := m.height - 6
+
 	tasks := ""
-	for i, task := range m.Tasks {
+	for i := m.offset; i < len(m.Tasks) && i < m.offset + visibleHeight; i++{
+
+		task := m.Tasks[i]
+
 		cursor := " "
 		if m.Cursor == i {
 			cursor = cursorStyle.Render(">")
@@ -223,10 +238,12 @@ func (m model) View() tea.View {
 		if task.Completed {
 			check = checkStyle.Render("[X]")
 		}
+
 		title := task.Title
 		if task.Completed{
 			title = doneStyle.Render(title)
 		}
+
 		tasks += fmt.Sprintf("%s %s %s\n", cursor, check, title)
 	}
 
