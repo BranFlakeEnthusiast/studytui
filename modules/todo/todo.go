@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"charm.land/lipgloss/v2"
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 type Task struct{
@@ -204,12 +204,15 @@ helpStyle = lipgloss.NewStyle().
 cursorStyle = lipgloss.NewStyle().
 	Bold(true)
 
+taskStyle = lipgloss.NewStyle().
+	MarginLeft(3)
 )
 
 
 func (m model) View() tea.View {
 	s:= titleStyle.Width(m.width).Render("Todo List") + "\n"
 
+	tasks := ""
 	for i, task := range m.Tasks {
 		cursor := " "
 		if m.Cursor == i {
@@ -224,9 +227,10 @@ func (m model) View() tea.View {
 		if task.Completed{
 			title = doneStyle.Render(title)
 		}
-
-		s+= fmt.Sprintf("%s %s %s\n", cursor, check, title)
+		tasks += fmt.Sprintf("%s %s %s\n", cursor, check, title)
 	}
+
+	s += taskStyle.Render(tasks)
 
 	if m.Adding ||  m.Editing {
 		s +="\n\n"+ m.Input.View()
