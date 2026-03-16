@@ -27,7 +27,7 @@ type model struct {
 	Path string
 
 	width int
-	height int 
+	height int
 }
 
 func New(path string) model{
@@ -171,8 +171,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Adding = true
 
 		case "e":
-			m.Input.Placeholder= m.Tasks[m.Cursor].Title
-			m.Editing = true
+			if len(m.Tasks) > 0{
+				m.Input.Placeholder= m.Tasks[m.Cursor].Title
+				m.Editing = true
+			}
 		}
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
