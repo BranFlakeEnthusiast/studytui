@@ -10,20 +10,20 @@ this can be chaned in main.go where todo.New is called
 
 keybinds:
 
-up: ↑/k
+up: ↑/k\
 down: ↓/j
 
-quit: q/ctrl+c
-add: a
-delete: d/backspace
-toggle: space/enter/x
+quit: q/ctrl+c\
+add: a\
+delete: d/backspace\
+toggle: space/enter/x\
 edit: e
 
 ## pomodoro timer
 
 this uses a 25 minute work period followed by a 5 minute break period
 
-quit: q/ctrl+c
-play/pause: space
-reset: r
+quit: q/ctrl+c\
+play/pause: space\
+reset: r\
 switch mode: s
