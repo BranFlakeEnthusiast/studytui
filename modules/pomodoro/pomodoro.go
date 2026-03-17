@@ -270,8 +270,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			m.remaining = m.duration
 
-		case "f":
+		case "right", "l":
 			m.fontChoice = (m.fontChoice + 1) % len(m.fonts)
+			saveConfig(m.path, config{
+				FontChoice: m.fontChoice,
+			})
+
+		case "left", "h":
+			m.fontChoice = m.fontChoice - 1
+			if m.fontChoice < 0{
+				m.fontChoice = len(m.fonts) - 1
+			}
 			saveConfig(m.path, config{
 				FontChoice: m.fontChoice,
 			})
@@ -339,7 +348,7 @@ func(m model) View() tea.View{
 		s += modeStyle.Width(m.width).Render("work!")
 	}
 
-	s += helpStyle.Width(m.width).Render("\n\n q quit - ␣ play/pause - r reset - s switch mode - f switch font")
+	s += helpStyle.Width(m.width).Render("\n\n q quit - ␣ play/pause - r reset - s switch mode - ←/→ switch font")
 
 	v:= tea.NewView(s)
 	v.AltScreen = true
