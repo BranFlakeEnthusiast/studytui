@@ -8,8 +8,6 @@ tab and shift+tab can be used to navigate between modules
 by default the todo list is stored in ~/Documents/notes/tasks.json
 this can be chaned in main.go where todo.New is called
 
-keybinds:
-
 up: ↑/k\
 down: ↓/j
 
