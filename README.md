@@ -28,4 +28,4 @@ quit: q/ctrl+c\
 play/pause: space\
 reset: r\
 switch mode: s\
-switch font: f
+switch font: ←/→/h/l
