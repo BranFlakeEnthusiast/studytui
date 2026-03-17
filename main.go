@@ -20,7 +20,7 @@ func tick() tea.Cmd {
 func main() {
 
 	todoModule := todo.New("~/Documents/notes/tasks.json")
-	pomoModule := pomodoro.New()
+	pomoModule := pomodoro.New("~/Documents/notes/timerconf.json")
 
 	manager := modules.Manager{
 		Modules: []modules.Module{
