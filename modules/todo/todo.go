@@ -256,7 +256,7 @@ func (m model) View() tea.View {
 	if m.Adding ||  m.Editing {
 		s +="\n\n"+ m.Input.View()
 	} else {
-		s += helpStyle.Width(m.width).Render("\n\n q quit - a add - d delete - x toggle - e edit")
+		s += helpStyle.Width(m.width).Render("\n\n q quit - a add - d delete - ␣ toggle - e edit")
 	}
 
 	v := tea.NewView(s)
