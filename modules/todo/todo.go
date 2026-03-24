@@ -180,6 +180,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 				saveTasks(m.Path, m.Tasks)
 			}
+
+		case "D":
+			if len(m.Tasks) > 0 {
+				for i := len(m.Tasks) - 1; i >= 0; i-- {
+					if m.Tasks[i].Completed{
+						m.Tasks = append(m.Tasks[:i], m.Tasks[i+1:]...,)
+					}
+				}
+				saveTasks(m.Path, m.Tasks)
+
+				if m.Cursor > len(m.Tasks)-1{
+					m.Cursor = len(m.Tasks)-1
+				}
+			}
+
 		case "a":
 			m.Input.Placeholder = "New task... "
 			m.Adding = true
@@ -256,7 +271,7 @@ func (m model) View() tea.View {
 	if m.Adding ||  m.Editing {
 		s +="\n\n"+ m.Input.View()
 	} else {
-		s += helpStyle.Width(m.width).Render("\n\n q quit - a add - d delete - ␣ toggle - e edit")
+		s += helpStyle.Width(m.width).Render("\n\n q quit - a add - ␣ toggle - d delete - D delete checked - e edit")
 	}
 
 	v := tea.NewView(s)
