@@ -56,6 +56,16 @@ func (m Manager) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.Current < 0 {
 				m.Current = len(m.Modules)-1
 			}
+
+			mod, _ := m.Modules[m.Current].Update(
+				tea.WindowSizeMsg{
+					Width: m.width,
+					Height: m.height,
+				},
+			)
+
+			m.Modules[m.Current] = mod.(Module)
+			return m, nil
 		}
 
 	case pomodoro.TickMsg:

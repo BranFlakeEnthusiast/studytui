@@ -140,7 +140,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		switch msg.String(){
-		case "q":
+		case "q", "ctrl+c":
 			saveTasks(m.Path, m.Tasks)
 			return m, tea.Quit
 		case "j", "down":
